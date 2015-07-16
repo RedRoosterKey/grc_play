@@ -2,7 +2,7 @@
 ##################################################
 # Gnuradio Python Flow Graph
 # Title: R820T Single Fm Receiver
-# Generated: Thu Jul 16 07:22:42 2015
+# Generated: Thu Jul 16 07:36:07 2015
 ##################################################
 
 from gnuradio import analog
@@ -156,6 +156,7 @@ class r820t_single_fm_receiver(grc_wxgui.top_block_gui):
           
         self.low_pass_filter_0 = filter.fir_filter_ccf(int(samp_rate / channel_width), firdes.low_pass(
         	1, samp_rate, 75e3, 25e3, firdes.WIN_HAMMING, 6.76))
+        self.blocks_wavfile_sink_0 = blocks.wavfile_sink("/tmp/ramdisk/test_save.wav", 1, int(48e3), 8)
         self.blocks_multiply_xx_0 = blocks.multiply_vcc(1)
         self.blocks_multiply_const_vxx_0 = blocks.multiply_const_vff((audio_gain, ))
         self.audio_sink_0 = audio.sink(48000, "", True)
@@ -176,6 +177,7 @@ class r820t_single_fm_receiver(grc_wxgui.top_block_gui):
         self.connect((self.analog_wfm_rcv_0, 0), (self.blocks_multiply_const_vxx_0, 0))
         self.connect((self.rational_resampler_xxx_0, 0), (self.analog_wfm_rcv_0, 0))
         self.connect((self.low_pass_filter_0, 0), (self.rational_resampler_xxx_0, 0))
+        self.connect((self.analog_wfm_rcv_0, 0), (self.blocks_wavfile_sink_0, 0))
 
 
 # QT sink close method reimplementation
@@ -229,9 +231,9 @@ class r820t_single_fm_receiver(grc_wxgui.top_block_gui):
 
     def set_audio_gain(self, audio_gain):
         self.audio_gain = audio_gain
-        self.blocks_multiply_const_vxx_0.set_k((self.audio_gain, ))
         self._audio_gain_slider.set_value(self.audio_gain)
         self._audio_gain_text_box.set_value(self.audio_gain)
+        self.blocks_multiply_const_vxx_0.set_k((self.audio_gain, ))
 
 if __name__ == '__main__':
     import ctypes

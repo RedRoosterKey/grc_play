@@ -2,7 +2,7 @@
 ##################################################
 # Gnuradio Python Flow Graph
 # Title: R820T Dual Fm Receiver
-# Generated: Thu Jul 16 07:24:17 2015
+# Generated: Thu Jul 16 08:25:52 2015
 ##################################################
 
 from gnuradio import analog
@@ -201,8 +201,8 @@ class r820t_dual_fm_receiver(grc_wxgui.top_block_gui):
         self.blocks_multiply_xx_0 = blocks.multiply_vcc(1)
         self.blocks_multiply_const_vxx_0_0 = blocks.multiply_const_vff((audio_gain, ))
         self.blocks_multiply_const_vxx_0 = blocks.multiply_const_vff((audio_gain, ))
+        self.blocks_add_xx_0 = blocks.add_vff(1)
         self.audio_sink_0_0 = audio.sink(48000, "", True)
-        self.audio_sink_0 = audio.sink(48000, "", True)
         self.analog_wfm_rcv_0_0 = analog.wfm_rcv(
         	quad_rate=480e3,
         	audio_decimation=10,
@@ -223,15 +223,16 @@ class r820t_dual_fm_receiver(grc_wxgui.top_block_gui):
         self.connect((self.blocks_multiply_xx_0, 0), (self.low_pass_filter_0, 0))
         self.connect((self.osmosdr_source_0, 0), (self.blocks_multiply_xx_1, 0))
         self.connect((self.analog_sig_source_x_0_0, 0), (self.blocks_multiply_xx_1, 1))
-        self.connect((self.blocks_multiply_const_vxx_0, 0), (self.audio_sink_0, 0))
         self.connect((self.analog_wfm_rcv_0, 0), (self.blocks_multiply_const_vxx_0, 0))
         self.connect((self.rational_resampler_xxx_0, 0), (self.analog_wfm_rcv_0, 0))
         self.connect((self.low_pass_filter_0, 0), (self.rational_resampler_xxx_0, 0))
-        self.connect((self.blocks_multiply_const_vxx_0_0, 0), (self.audio_sink_0_0, 0))
-        self.connect((self.analog_wfm_rcv_0_0, 0), (self.blocks_multiply_const_vxx_0_0, 0))
-        self.connect((self.rational_resampler_xxx_0_0, 0), (self.analog_wfm_rcv_0_0, 0))
-        self.connect((self.low_pass_filter_0_0, 0), (self.rational_resampler_xxx_0_0, 0))
         self.connect((self.blocks_multiply_xx_1, 0), (self.low_pass_filter_0_0, 0))
+        self.connect((self.low_pass_filter_0_0, 0), (self.rational_resampler_xxx_0_0, 0))
+        self.connect((self.rational_resampler_xxx_0_0, 0), (self.analog_wfm_rcv_0_0, 0))
+        self.connect((self.analog_wfm_rcv_0_0, 0), (self.blocks_multiply_const_vxx_0_0, 0))
+        self.connect((self.blocks_multiply_const_vxx_0, 0), (self.blocks_add_xx_0, 0))
+        self.connect((self.blocks_multiply_const_vxx_0_0, 0), (self.blocks_add_xx_0, 1))
+        self.connect((self.blocks_add_xx_0, 0), (self.audio_sink_0_0, 0))
 
 
 # QT sink close method reimplementation
@@ -291,8 +292,8 @@ class r820t_dual_fm_receiver(grc_wxgui.top_block_gui):
         self.osmosdr_source_0.set_sample_rate(self.samp_rate)
         self.analog_sig_source_x_0_0.set_sampling_freq(self.samp_rate)
         self.low_pass_filter_0.set_taps(firdes.low_pass(1, self.samp_rate, 75e3, 25e3, firdes.WIN_HAMMING, 6.76))
-        self.low_pass_filter_0_0.set_taps(firdes.low_pass(1, self.samp_rate, 75e3, 25e3, firdes.WIN_HAMMING, 6.76))
         self.wxgui_fftsink2_0.set_sample_rate(self.samp_rate)
+        self.low_pass_filter_0_0.set_taps(firdes.low_pass(1, self.samp_rate, 75e3, 25e3, firdes.WIN_HAMMING, 6.76))
 
     def get_channel_width(self):
         return self.channel_width
